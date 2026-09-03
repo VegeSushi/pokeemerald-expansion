@@ -13,6 +13,7 @@
 #include "international_string_util.h"
 #include "link.h"
 #include "main.h"
+#include "new_game.h"
 #include "main_menu.h"
 #include "menu.h"
 #include "list_menu.h"
@@ -1084,14 +1085,21 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
                 if (action != ACTION_OPTION)
                     sCurrItemAndOptionMenuCheck = 0;
                 else
-                    sCurrItemAndOptionMenuCheck |= OPTION_MENU_FLAG;  // entering the options menu
+                    sCurrItemAndOptionMenuCheck |= OPTION_MENU_FLAG;
                 StartNewGameSceneFrlg();
                 return;
             }
+            {
+                const u8 name[] = _("Veggie");
+                NewGameInitData();
+                StringCopy(gSaveBlock2Ptr->playerName, name);
+                gSaveBlock2Ptr->playerGender = MALE;
 
-            gPlttBufferUnfaded[0] = RGB_BLACK;
-            gPlttBufferFaded[0] = RGB_BLACK;
-            gTasks[taskId].func = Task_NewGameBirchSpeech_Init;
+                gPlttBufferUnfaded[0] = RGB_BLACK;
+                gPlttBufferFaded[0] = RGB_BLACK;
+                SetMainCallback2(CB2_NewGame);
+                DestroyTask(taskId);
+            }
             break;
         case ACTION_CONTINUE:
             gPlttBufferUnfaded[0] = RGB_BLACK;
