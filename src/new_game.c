@@ -211,7 +211,24 @@ void NewGameInitData(void)
     ResetFanClub();
     ResetLotteryCorner();
     UpdateDailySeed();
-    WarpToTruck();
+    
+    // --- CUSTOM SPAWN & MEOWTH SETUP ---
+    {
+		struct Pokemon mon;
+		u8 nickname[] = _("Whiskers");
+
+		CreateMon(&mon, SPECIES_MEOWTH, 5, Random32(), OTID_STRUCT_PLAYER_ID);
+		SetMonData(&mon, MON_DATA_NICKNAME, nickname);
+		GiveCapturedMonToPlayer(&mon);
+		
+		FlagSet(FLAG_SYS_POKEMON_GET); 
+
+		// Set the starting warp to MAP_VEGGIE_HOUSE at X: 4, Y: 2
+		SetWarpDestination(MAP_GROUP(MAP_VEGGIE_HOUSE), MAP_NUM(MAP_VEGGIE_HOUSE), WARP_ID_NONE, 4, 2);
+		WarpIntoMap();
+	}
+    // -----------------------------------
+
     if (IS_FRLG)
         RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);
     else
